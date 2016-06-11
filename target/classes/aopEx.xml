@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/aop 
+		http://www.springframework.org/schema/aop/spring-aop-3.2.xsd">
+
+	<bean id="adviceLog" class="com.test.aopEx.AdviceLog" />
+	
+	<!-- aop:around -->
+	<aop:config>
+		<!-- aspect : code(핵심기능) + advice(공통기능)을 어떻게 실행할 것인지 정의 -->
+		<aop:aspect id="prof" ref="adviceLog">
+			<!-- pointcut을 지정한다. (com.test.aopEx 이하 모든 메소드를 pointcut으로 지정)-->
+			<aop:pointcut id="pcMethod" expression="within(com.test.aopEx.*)" /> 
+			<aop:around pointcut-ref="pcMethod" method="profile" />
+		</aop:aspect>
+	</aop:config>
+	
+	<bean id="student" class="com.test.aopEx.Student">
+		<property name="name" value="홍길도" />
+		<property name="hakbun" value="201111111" />
+		<property name="age" value="20" />
+		<property name="grade" value="2학년" />
+	</bean>
+	
+	<bean id="staff" class="com.test.aopEx.Staff">
+		<property name="name" value="김길동" />
+		<property name="age" value="27" />
+		<property name="dept" value="개발팀" />
+	</bean>
+</beans>

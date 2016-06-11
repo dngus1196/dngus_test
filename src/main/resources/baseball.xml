@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+	
+	<!-- 자바코드에 있는 설정을 XML로 가져온다 -->
+	<context:annotation-config />
+	<bean class="com.test.diEx.ConfigApp" />
+	
+	<!-- XML을 이용한 의존관계 설정 -->
+	<bean id="player2" class="com.test.diEx.Player">
+		
+		<!-- 생성자 설정을 이용한 주입 방식 -->
+		<constructor-arg value="강정호" />
+		<constructor-arg value="30" />
+		<constructor-arg>
+			<list>
+				<value>1번타자</value>
+				<value>유격수</value>
+			</list>
+		</constructor-arg>
+		
+		<!-- 프로퍼티설정을 이용한 주입 방식. (setXXXXXX() set을 제외한 XXXXXX를 프로퍼티 name으로 사용 
+			 해당클래스의 setHeight()를 호출하는 것
+		-->
+		<property name="height" value="178" />
+		<property name="weight" value="69" />
+	</bean>
+</beans>

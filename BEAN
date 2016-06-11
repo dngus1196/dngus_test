@@ -1,0 +1,66 @@
+[스프링 컨테이너 생명주기]
+
+스프링 컨테이너 생성  :  GenericXmlApplicationContext ctx = new GenericXmlApplicationContext();
+                        설정  :  ctx.load(“classpath:baseBall.xml”);          // new GenericXmlApplicationContext(“classpath:baseBall.xml”);  인자로 넣기도 함
+                                   ctx.refresh();
+                        사용  :  Player player = ctx.getBean(“player”,Player.class);
+                                   player.getPosition();
+                        종료  :  ctx.close();
+
+
+[빈 Life Cycle(생명주기)]
+ctx.refresh 과정에서 생성
+ctx.close() 컨테이너가 소멸하는 단계에서 빈도 자동으로 소멸됩니다.
+
+InitializingBean 인터페이스 
+     구현해야 할 메소드
+     public void afterPropertiesSet() throws Exception
+
+DisposableBean 인터페이스
+     public void destroy() throws Exception
+
+InitializingBean, DisposableBean은 따로 구현해도 되고, 동시에 구현해도 된다.
+
+     # 어노테이션을 활용
+     @PostConstruct
+     public void initMethod() {}
+
+     @PreDestroy
+     public void destroyMethod() {}
+
+
+[빈의 범위(scope)]
+범위는 해당하는 객체가 어디까지 영향을 미치는지 결정하는 것
+
+<bean> 태그의 속성 값 : default 값은 singleton
+singleton : 스프링 컨테이너에 의해 한 개의 빈 객체만 생성 
+prototype : 빈을 사용할 때 마다 객체를 생성
+request : http 요청마다 빈 객체를 생성(webApplicationContext에서만 적용)
+session : http 세션마다 빈 객체를 생성(webApplicationContext에서만 적용)
+global-session : 글로벌 http 세션에 대해 빈 객체를 생성
+
+
+[커스텀 초기화 메소드 / 커스텀 소멸 메소드]
+: 객체의 생성과 소멸시에 특정메소드를 실행시키고 싶을 때 사용한다.
+- init-method : 커스텀 초기화 메소드를 지정하는 <bean>태그의 속성
+- destroy-method : 커스텀 소멸 메소드를 지정하는 <bean>태그의 속성
+
+** BeanNameAware 인터페이스
+: 빈객체가 자기자신의 이름을 알아야 할 경우 사용된다.
+: 클래스가 BeanNameAware 인터페이스를 구현한 경우 컨테이너는 setBeanName()메소드를 호출해서 빈객체의 이름을 전달
+: setBeanName(String arg) : 객체가 생성될 때 해당 객체의 id나 name값을 전달 받는 메소드
+
+
+[외부 파일을 이용한 빈을 설정]
+- EnvironmentAware 인터페이스를 활용
+  Environment 객체 얻기
+
+     . Context     —> getEnvironment()     —> Environment 객체 얻기
+     . Environment     —> getPropertySources 객체를 얻기     
+     . PropertySources     —> 프로퍼티를 추가하거나(addLast), 추출하는(getProperty) 작업을 한다.
+
+- 프로퍼티 파일을 이용한 빈설정
+     . XML 파일에 외부프로퍼티 파일을 명시하는 방법
+     . Java 파일에 외부 프로퍼티 파일을 명시하는 방법
+
+- 프로파일 속성(profile)을 이용한 빈설정
